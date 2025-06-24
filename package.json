@@ -6,7 +6,8 @@
   "scripts": {
     "test": "cross-env PORT=8000 mocha --watch",
     "start-dev": "webpack -w & nodemon --watch server.js --watch server/",
-    "start": "nodemon --watch server.js --watch server/"
+    "start": "nodemon --watch server.js --watch server/",
+    "build": "webpack --config webpack.config.js"
   },
   "author": "Codecademy",
   "license": "ISC",
