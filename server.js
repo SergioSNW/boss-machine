@@ -24,6 +24,7 @@ app.use('/api', apiRouter);
 // app.get('/', (req, res) => {
 //   res.send('Server is running!');
 // });
+app.use(express.static('browser'));
 
 // This conditional is here for testing purposes:
 if (!module.parent) {
