@@ -14,5 +14,10 @@
     <div id="app"></div>
     <div id="content"></div>
     <script src="/js/bundle.js"></script>
+    <script>
+      if (!window.process) {
+        window.process = { env: { NODE_ENV: 'development' } };
+      }
+    </script>
   </body>
 </html>
