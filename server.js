@@ -13,6 +13,9 @@ const PORT = process.env.PORT || 4001;
 const cors = require('cors');
 app.use(cors());
 
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'browser')));
+
 // Add middware for parsing request bodies here:
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
