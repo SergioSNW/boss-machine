@@ -11,6 +11,7 @@
   "author": "Codecademy",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^9.8.0",
     "axios": "^0.16.2",
     "body-parser": "^1.17.2",
     "chai": "^4.1.1",
