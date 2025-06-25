@@ -8,6 +8,7 @@ module.exports = app;
  *  the frontend application to interact as planned with the api server
  */
 const PORT = process.env.PORT || 4001;
+const API_URL = 'https://boss-machine-rt4w.onrender.com';
 
 // Add middleware for handling CORS requests from index.html
 const cors = require('cors');
