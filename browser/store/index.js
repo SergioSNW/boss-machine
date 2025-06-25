@@ -21,9 +21,7 @@ const store = createStore(
     work,
     appState,
   }),
-  composeEnhancers(
-    applyMiddleware(thunks)
-  )
-)
+  composeEnhancers(applyMiddleware(thunks))
+);
 
 export default store;

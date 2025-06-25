@@ -8,35 +8,35 @@ const RESET_EDITING_STATE = 'RESET_STATE';
 export const setIdeaEditing = () => {
   return {
     type: SET_NEW_IDEA_ON,
-  }
-}
+  };
+};
 
 export const setMinionEditing = () => {
   return {
     type: SET_NEW_MINION_ON,
-  }
-}
+  };
+};
 
 export const setWorkEditing = () => {
   return {
     type: SET_NEW_WORK_ON,
-  }
-}
+  };
+};
 
 export const resetEditingState = () => {
   return {
     type: RESET_EDITING_STATE,
-  }
-}
+  };
+};
 
 const initial = {
   editingNewIdea: false,
   editingNewMinion: false,
   editingNewWork: false,
-}
+};
 
 export default (initialState = initial, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case SET_NEW_IDEA_ON:
       return Object.assign({}, initialState, {
         editingNewIdea: true,
@@ -54,4 +54,4 @@ export default (initialState = initial, action) => {
     default:
       return initialState;
   }
-}
+};

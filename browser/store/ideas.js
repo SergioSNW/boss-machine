@@ -29,11 +29,12 @@ export const updateIdea = (idea) => {
   };
 };
 
+const API_URL = 'https://boss-machine-rt4w.onrender.com';
 // Thunks
 
 export const createIdeaThunk = (idea) => (dispatch) => {
   axios
-    .post(`${process.env.REACT_APP_API_URL}/api/ideas`, idea)
+    .post(`${API_URL}/api/ideas`, idea)
     .then((res) => res.data)
     .then((createdIdea) => {
       dispatch(createIdea(createdIdea));
@@ -43,7 +44,7 @@ export const createIdeaThunk = (idea) => (dispatch) => {
 
 export const updateIdeaThunk = (idea) => (dispatch) => {
   axios
-    .put(`${process.env.REACT_APP_API_URL}/api/ideas/${idea.id}`, idea)
+    .put(`${API_URL}/api/ideas/${idea.id}`, idea)
     .then((res) => res.data)
     .then((updatedIdea) => {
       dispatch(updateIdea(updatedIdea));

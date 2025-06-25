@@ -7,6 +7,7 @@ const SET_MINIONS = 'SET_MINIONS';
 const CREATE_MINION = 'CREATE_MINION';
 const UPDATE_MINION = 'UPDATE_MINION';
 
+const API_URL = 'https://boss-machine-rt4w.onrender.com';
 // Actions
 
 export const setMinions = (minions) => {
@@ -34,7 +35,7 @@ export const updateMinion = (minion) => {
 
 export const createMinionThunk = (minion) => (dispatch) => {
   axios
-    .post(`${process.env.REACT_APP_API_URL}/api/minions`, minion)
+    .post(`${API_URL}/api/minions`, minion)
     .then((res) => res.data)
     .then((createdMinion) => {
       dispatch(addMinion(createdMinion));
@@ -45,7 +46,7 @@ export const createMinionThunk = (minion) => (dispatch) => {
 
 export const updateMinionThunk = (minion) => (dispatch) => {
   axios
-    .put(`${process.env.REACT_APP_API_URL}/api/minions/${minion.id}`, minion)
+    .put(`${API_URL}/api/minions/${minion.id}`, minion)
     .then((res) => res.data)
     .then((updatedMinion) => {
       dispatch(updateMinion(updatedMinion));
@@ -56,10 +57,10 @@ export const updateMinionThunk = (minion) => (dispatch) => {
 
 export const deleteMinionThunk = (minionId) => (dispatch) => {
   axios
-    .delete(`${process.env.REACT_APP_API_URL}/api/minions/${minionId}`)
+    .delete(`${API_URL}/api/minions/${minionId}`)
     .then((res) => res.data)
     .then(() => {
-      return axios.get(`${process.env.REACT_APP_API_URL}/api/minions`);
+      return axios.get(`${API_URL}/api/minions`);
     })
     .then((res) => res.data)
     .then((allMinions) => {

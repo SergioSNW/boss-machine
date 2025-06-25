@@ -4,6 +4,8 @@ const CREATE_MEETING = 'CREATE_MEETING';
 const CANCEL_MEETINGS = 'CANCEL_MEETINGS';
 const SET_MEETINGS = 'SET_MEETINGS';
 
+const API_URL = 'https://boss-machine-rt4w.onrender.com';
+
 export const setMeetings = (meetings) => {
   return {
     type: SET_MEETINGS,
@@ -26,7 +28,7 @@ export const cancelMeetings = () => {
 
 export const createMeetingThunk = () => (dispatch) => {
   axios
-    .post(`${process.env.REACT_APP_API_URL}/api/meetings`)
+    .post(`${API_URL}/api/meetings`)
     .then((res) => res.data)
     .then((createdMeeting) => {
       dispatch(createMeeting(createdMeeting));
@@ -36,7 +38,7 @@ export const createMeetingThunk = () => (dispatch) => {
 
 export const cancelMeetingsThunk = () => (dispatch) => {
   axios
-    .delete(`${process.env.REACT_APP_API_URL}/api/meetings`)
+    .delete(`${API_URL}/api/meetings`)
     .then(() => {
       dispatch(cancelMeetings());
     })

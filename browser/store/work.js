@@ -5,6 +5,7 @@ const CREATE_WORK = 'CREATE_WORK';
 const UPDATE_WORK = 'UPDATE_WORK';
 const DELETE_WORK = 'DELETE_WORK';
 
+const API_URL = 'https://boss-machine-rt4w.onrender.com';
 // Actions
 
 export const setWork = (allWork) => {
@@ -39,10 +40,7 @@ export const deleteWork = (workId) => {
 
 export const createWorkThunk = (work) => (dispatch) => {
   axios
-    .post(
-      `${process.env.REACT_APP_API_URL}/api/minions/${work.minionId}/work`,
-      work
-    )
+    .post(`${API_URL}/api/minions/${work.minionId}/work`, work)
     .then((res) => res.data)
     .then((createdWork) => {
       dispatch(addWork(createdWork));
@@ -52,10 +50,7 @@ export const createWorkThunk = (work) => (dispatch) => {
 
 export const updateWorkThunk = (work) => (dispatch) => {
   axios
-    .put(
-      `${process.env.REACT_APP_API_URL}/api/minions/${work.minionId}/work/${work.id}`,
-      work
-    )
+    .put(`${API_URL}/api/minions/${work.minionId}/work/${work.id}`, work)
     .then((res) => res.data)
     .then((updatedWork) => {
       dispatch(updateWork(updatedWork));
@@ -65,9 +60,7 @@ export const updateWorkThunk = (work) => (dispatch) => {
 
 export const deleteWorkThunk = (work) => (dispatch) => {
   axios
-    .delete(
-      `${process.env.REACT_APP_API_URL}/api/minions/${work.minionId}/work/${work.id}`
-    )
+    .delete(`${API_URL}/api/minions/${work.minionId}/work/${work.id}`)
     .then(() => {
       dispatch(deleteWork(work.id));
     })
