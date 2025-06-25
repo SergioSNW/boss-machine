@@ -137,7 +137,7 @@ module.exports = invariant;
 
 
 
-var emptyFunction = __webpack_require__(13);
+var emptyFunction = __webpack_require__(12);
 
 /**
  * Similar to invariant but only logs a warning if the condition is not met.
@@ -650,7 +650,7 @@ module.exports = invariant;
 
 var _prodInvariant = __webpack_require__(27);
 
-var ReactCurrentOwner = __webpack_require__(15);
+var ReactCurrentOwner = __webpack_require__(14);
 
 var invariant = __webpack_require__(0);
 var warning = __webpack_require__(1);
@@ -1378,196 +1378,6 @@ module.exports = {
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1609,7 +1419,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 module.exports = emptyFunction;
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1863,7 +1673,7 @@ var ReactUpdates = {
 module.exports = ReactUpdates;
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1895,7 +1705,7 @@ var ReactCurrentOwner = {
 module.exports = ReactCurrentOwner;
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1913,7 +1723,7 @@ var _assign = __webpack_require__(4);
 
 var PooledClass = __webpack_require__(24);
 
-var emptyFunction = __webpack_require__(13);
+var emptyFunction = __webpack_require__(12);
 var warning = __webpack_require__(1);
 
 var didWarnForAddedNewProperty = false;
@@ -2167,6 +1977,196 @@ function getPooledWarningPropertyDefinition(propName, getVal) {
      true ? warning(warningCondition, "This synthetic event is reused for performance reasons. If you're seeing this, " + "you're %s `%s` on a released/nullified synthetic event. %s. " + 'If you must keep the original synthetic event around, use event.persist(). ' + 'See https://fb.me/react-event-pooling for more information.', action, propName, result) : void 0;
   }
 }
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
 
 /***/ }),
 /* 17 */
@@ -2915,7 +2915,7 @@ module.exports = PooledClass;
 
 var _assign = __webpack_require__(4);
 
-var ReactCurrentOwner = __webpack_require__(15);
+var ReactCurrentOwner = __webpack_require__(14);
 
 var warning = __webpack_require__(1);
 var canDefineProperty = __webpack_require__(46);
@@ -4516,7 +4516,7 @@ module.exports = EventPluginHub;
 
 
 
-var SyntheticEvent = __webpack_require__(16);
+var SyntheticEvent = __webpack_require__(15);
 
 var getEventTarget = __webpack_require__(55);
 
@@ -6006,7 +6006,7 @@ exports.default = function () {
       return initialState;
   }
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ }),
 /* 50 */
@@ -6091,7 +6091,7 @@ exports.default = function () {
       return initialState;
   }
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ }),
 /* 51 */
@@ -6211,7 +6211,7 @@ exports.default = function () {
       return initialState;
   }
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ }),
 /* 52 */
@@ -7460,10 +7460,10 @@ module.exports = KeyEscapeUtils;
 
 var _prodInvariant = __webpack_require__(2);
 
-var ReactCurrentOwner = __webpack_require__(15);
+var ReactCurrentOwner = __webpack_require__(14);
 var ReactInstanceMap = __webpack_require__(37);
 var ReactInstrumentation = __webpack_require__(9);
-var ReactUpdates = __webpack_require__(14);
+var ReactUpdates = __webpack_require__(13);
 
 var invariant = __webpack_require__(0);
 var warning = __webpack_require__(1);
@@ -7697,7 +7697,7 @@ module.exports = ReactUpdateQueue;
 
 var _assign = __webpack_require__(4);
 
-var emptyFunction = __webpack_require__(13);
+var emptyFunction = __webpack_require__(12);
 var warning = __webpack_require__(1);
 
 var validateDOMNesting = emptyFunction;
@@ -9003,7 +9003,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ }),
 /* 83 */
@@ -9144,7 +9144,7 @@ exports.default = function () {
       return initialState;
   }
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ }),
 /* 85 */
@@ -11197,7 +11197,7 @@ module.exports = getIteratorFn;
 
 
 
-var ReactCurrentOwner = __webpack_require__(15);
+var ReactCurrentOwner = __webpack_require__(14);
 var ReactComponentTreeHook = __webpack_require__(8);
 var ReactElement = __webpack_require__(25);
 
@@ -12461,7 +12461,7 @@ var _assign = __webpack_require__(4);
 
 var LinkedValueUtils = __webpack_require__(61);
 var ReactDOMComponentTree = __webpack_require__(5);
-var ReactUpdates = __webpack_require__(14);
+var ReactUpdates = __webpack_require__(13);
 
 var warning = __webpack_require__(1);
 
@@ -12941,7 +12941,7 @@ module.exports = ReactHostComponent;
 
 var _prodInvariant = __webpack_require__(2);
 
-var ReactCurrentOwner = __webpack_require__(15);
+var ReactCurrentOwner = __webpack_require__(14);
 var REACT_ELEMENT_TYPE = __webpack_require__(212);
 
 var getIteratorFn = __webpack_require__(213);
@@ -13119,7 +13119,7 @@ module.exports = traverseAllChildren;
  * @typechecks
  */
 
-var emptyFunction = __webpack_require__(13);
+var emptyFunction = __webpack_require__(12);
 
 /**
  * Upstream version of event listener. Does not take into account specific
@@ -13372,7 +13372,7 @@ var DOMLazyTree = __webpack_require__(28);
 var DOMProperty = __webpack_require__(20);
 var React = __webpack_require__(29);
 var ReactBrowserEventEmitter = __webpack_require__(45);
-var ReactCurrentOwner = __webpack_require__(15);
+var ReactCurrentOwner = __webpack_require__(14);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactDOMContainerInfo = __webpack_require__(242);
 var ReactDOMFeatureFlags = __webpack_require__(243);
@@ -13382,7 +13382,7 @@ var ReactInstrumentation = __webpack_require__(9);
 var ReactMarkupChecksum = __webpack_require__(244);
 var ReactReconciler = __webpack_require__(26);
 var ReactUpdateQueue = __webpack_require__(68);
-var ReactUpdates = __webpack_require__(14);
+var ReactUpdates = __webpack_require__(13);
 
 var emptyObject = __webpack_require__(62);
 var instantiateReactComponent = __webpack_require__(111);
@@ -16257,7 +16257,7 @@ exports.default = function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
+
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -16322,9 +16322,10 @@ var _Minion2 = _interopRequireDefault(_Minion);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // https://boss-machine-rt4w.onrender.com/ was previously http://localhost:4001
+var API_URL = 'https://boss-machine-rt4w.onrender.com';
 
 var appEnter = function appEnter(nextRouterState) {
-  Promise.all([_axios2.default.get(process.env.REACT_APP_API_URL + 'api/minions'), _axios2.default.get(process.env.REACT_APP_API_URL + 'api/ideas'), _axios2.default.get(process.env.REACT_APP_API_URL + 'api/meetings')]).then(function (_ref) {
+  Promise.all([_axios2.default.get(API_URL + '/api/minions'), _axios2.default.get(API_URL + '/api/ideas'), _axios2.default.get(API_URL + '/api/meetings')]).then(function (_ref) {
     var _ref2 = _slicedToArray(_ref, 3),
         minionsResponse = _ref2[0],
         ideasResponse = _ref2[1],
@@ -16346,13 +16347,13 @@ var appEnter = function appEnter(nextRouterState) {
 var singleMinionEnter = function singleMinionEnter(nextRouterState) {
   _index2.default.dispatch((0, _appState.resetEditingState)());
   var id = nextRouterState.params.id;
-  _axios2.default.get(process.env.REACT_APP_API_URL + 'api/minions/' + id).then(function (res) {
+  _axios2.default.get(API_URL + '/api/minions/' + id).then(function (res) {
     return res.data;
   }).then(function (minion) {
     _index2.default.dispatch((0, _selectedMinion.setSelectedMinion)(minion));
   }).catch(console.error.bind(console));
 
-  _axios2.default.get(process.env.REACT_APP_API_URL + 'api/minions/' + id + '/work').then(function (res) {
+  _axios2.default.get(API_URL + '/api/minions/' + id + '/work').then(function (res) {
     return res.data;
   }).then(function (work) {
     _index2.default.dispatch((0, _work.setWork)(work));
@@ -16361,7 +16362,7 @@ var singleMinionEnter = function singleMinionEnter(nextRouterState) {
 
 var singleIdeaEnter = function singleIdeaEnter(nextRouterState) {
   var id = nextRouterState.params.id;
-  _axios2.default.get(process.env.REACT_APP_API_URL + 'api/ideas/' + id).then(function (res) {
+  _axios2.default.get(API_URL + '/api/ideas/' + id).then(function (res) {
     return res.data;
   }).then(function (idea) {
     _index2.default.dispatch((0, _selectedIdea.setSelectedIdea)(idea));
@@ -16420,7 +16421,6 @@ _reactDom2.default.render(_react2.default.createElement(
     )
   )
 ), document.getElementById('app'));
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ }),
 /* 152 */
@@ -16453,7 +16453,7 @@ var ReactDOMComponentTree = __webpack_require__(5);
 var ReactDefaultInjection = __webpack_require__(154);
 var ReactMount = __webpack_require__(119);
 var ReactReconciler = __webpack_require__(26);
-var ReactUpdates = __webpack_require__(14);
+var ReactUpdates = __webpack_require__(13);
 var ReactVersion = __webpack_require__(246);
 
 var findDOMNode = __webpack_require__(247);
@@ -17212,7 +17212,7 @@ module.exports = FallbackCompositionState;
 
 
 
-var SyntheticEvent = __webpack_require__(16);
+var SyntheticEvent = __webpack_require__(15);
 
 /**
  * @interface Event
@@ -17251,7 +17251,7 @@ module.exports = SyntheticCompositionEvent;
 
 
 
-var SyntheticEvent = __webpack_require__(16);
+var SyntheticEvent = __webpack_require__(15);
 
 /**
  * @interface Event
@@ -17295,8 +17295,8 @@ var EventPluginHub = __webpack_require__(34);
 var EventPropagators = __webpack_require__(33);
 var ExecutionEnvironment = __webpack_require__(6);
 var ReactDOMComponentTree = __webpack_require__(5);
-var ReactUpdates = __webpack_require__(14);
-var SyntheticEvent = __webpack_require__(16);
+var ReactUpdates = __webpack_require__(13);
+var SyntheticEvent = __webpack_require__(15);
 
 var inputValueTracking = __webpack_require__(92);
 var getEventTarget = __webpack_require__(55);
@@ -18705,7 +18705,7 @@ var DOMLazyTree = __webpack_require__(28);
 var ExecutionEnvironment = __webpack_require__(6);
 
 var createNodesFromMarkup = __webpack_require__(173);
-var emptyFunction = __webpack_require__(13);
+var emptyFunction = __webpack_require__(12);
 var invariant = __webpack_require__(0);
 
 var Danger = {
@@ -19123,7 +19123,7 @@ var ReactInstrumentation = __webpack_require__(9);
 var ReactMultiChild = __webpack_require__(206);
 var ReactServerRenderingTransaction = __webpack_require__(215);
 
-var emptyFunction = __webpack_require__(13);
+var emptyFunction = __webpack_require__(12);
 var escapeTextContentForBrowser = __webpack_require__(44);
 var invariant = __webpack_require__(0);
 var isEventSupported = __webpack_require__(56);
@@ -20806,7 +20806,7 @@ var _prodInvariant = __webpack_require__(2),
 var DOMPropertyOperations = __webpack_require__(98);
 var LinkedValueUtils = __webpack_require__(61);
 var ReactDOMComponentTree = __webpack_require__(5);
-var ReactUpdates = __webpack_require__(14);
+var ReactUpdates = __webpack_require__(13);
 
 var invariant = __webpack_require__(0);
 var warning = __webpack_require__(1);
@@ -21391,7 +21391,7 @@ module.exports = checkPropTypes;
 var PooledClass = __webpack_require__(193);
 var ReactElement = __webpack_require__(25);
 
-var emptyFunction = __webpack_require__(13);
+var emptyFunction = __webpack_require__(12);
 var traverseAllChildren = __webpack_require__(194);
 
 var twoArgumentPooler = PooledClass.twoArgumentPooler;
@@ -21699,7 +21699,7 @@ module.exports = PooledClass;
 
 var _prodInvariant = __webpack_require__(27);
 
-var ReactCurrentOwner = __webpack_require__(15);
+var ReactCurrentOwner = __webpack_require__(14);
 var REACT_ELEMENT_TYPE = __webpack_require__(106);
 
 var getIteratorFn = __webpack_require__(107);
@@ -22184,7 +22184,7 @@ function checkReactTypeSpec(typeSpecs, values, location, componentName, element,
 }
 
 module.exports = checkReactTypeSpec;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ }),
 /* 198 */
@@ -22486,7 +22486,7 @@ var _prodInvariant = __webpack_require__(2),
 
 var LinkedValueUtils = __webpack_require__(61);
 var ReactDOMComponentTree = __webpack_require__(5);
-var ReactUpdates = __webpack_require__(14);
+var ReactUpdates = __webpack_require__(13);
 
 var invariant = __webpack_require__(0);
 var warning = __webpack_require__(1);
@@ -22650,11 +22650,11 @@ var ReactComponentEnvironment = __webpack_require__(64);
 var ReactInstanceMap = __webpack_require__(37);
 var ReactInstrumentation = __webpack_require__(9);
 
-var ReactCurrentOwner = __webpack_require__(15);
+var ReactCurrentOwner = __webpack_require__(14);
 var ReactReconciler = __webpack_require__(26);
 var ReactChildReconciler = __webpack_require__(207);
 
-var emptyFunction = __webpack_require__(13);
+var emptyFunction = __webpack_require__(12);
 var flattenChildren = __webpack_require__(214);
 var invariant = __webpack_require__(0);
 
@@ -23233,7 +23233,7 @@ var ReactChildReconciler = {
 };
 
 module.exports = ReactChildReconciler;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ }),
 /* 208 */
@@ -23255,7 +23255,7 @@ var _prodInvariant = __webpack_require__(2),
 
 var React = __webpack_require__(29);
 var ReactComponentEnvironment = __webpack_require__(64);
-var ReactCurrentOwner = __webpack_require__(15);
+var ReactCurrentOwner = __webpack_require__(14);
 var ReactErrorUtils = __webpack_require__(54);
 var ReactInstanceMap = __webpack_require__(37);
 var ReactInstrumentation = __webpack_require__(9);
@@ -24227,7 +24227,7 @@ function checkReactTypeSpec(typeSpecs, values, location, componentName, element,
 }
 
 module.exports = checkReactTypeSpec;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ }),
 /* 210 */
@@ -24426,7 +24426,7 @@ function flattenChildren(children, selfDebugID) {
 }
 
 module.exports = flattenChildren;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ }),
 /* 215 */
@@ -25047,10 +25047,10 @@ module.exports = ReactDOMTextComponent;
 
 var _assign = __webpack_require__(4);
 
-var ReactUpdates = __webpack_require__(14);
+var ReactUpdates = __webpack_require__(13);
 var Transaction = __webpack_require__(41);
 
-var emptyFunction = __webpack_require__(13);
+var emptyFunction = __webpack_require__(12);
 
 var RESET_BATCHED_UPDATES = {
   initialize: emptyFunction,
@@ -25122,7 +25122,7 @@ var EventListener = __webpack_require__(116);
 var ExecutionEnvironment = __webpack_require__(6);
 var PooledClass = __webpack_require__(24);
 var ReactDOMComponentTree = __webpack_require__(5);
-var ReactUpdates = __webpack_require__(14);
+var ReactUpdates = __webpack_require__(13);
 
 var getEventTarget = __webpack_require__(55);
 var getUnboundedScrollPosition = __webpack_require__(222);
@@ -25323,7 +25323,7 @@ var ReactComponentEnvironment = __webpack_require__(64);
 var ReactEmptyComponent = __webpack_require__(113);
 var ReactBrowserEventEmitter = __webpack_require__(45);
 var ReactHostComponent = __webpack_require__(114);
-var ReactUpdates = __webpack_require__(14);
+var ReactUpdates = __webpack_require__(13);
 
 var ReactInjection = {
   Component: ReactComponentEnvironment.injection,
@@ -26234,7 +26234,7 @@ var EventPropagators = __webpack_require__(33);
 var ExecutionEnvironment = __webpack_require__(6);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactInputSelection = __webpack_require__(117);
-var SyntheticEvent = __webpack_require__(16);
+var SyntheticEvent = __webpack_require__(15);
 
 var getActiveElement = __webpack_require__(118);
 var isTextInputElement = __webpack_require__(93);
@@ -26429,7 +26429,7 @@ var EventPropagators = __webpack_require__(33);
 var ReactDOMComponentTree = __webpack_require__(5);
 var SyntheticAnimationEvent = __webpack_require__(233);
 var SyntheticClipboardEvent = __webpack_require__(234);
-var SyntheticEvent = __webpack_require__(16);
+var SyntheticEvent = __webpack_require__(15);
 var SyntheticFocusEvent = __webpack_require__(235);
 var SyntheticKeyboardEvent = __webpack_require__(236);
 var SyntheticMouseEvent = __webpack_require__(42);
@@ -26439,7 +26439,7 @@ var SyntheticTransitionEvent = __webpack_require__(240);
 var SyntheticUIEvent = __webpack_require__(35);
 var SyntheticWheelEvent = __webpack_require__(241);
 
-var emptyFunction = __webpack_require__(13);
+var emptyFunction = __webpack_require__(12);
 var getEventCharCode = __webpack_require__(70);
 var invariant = __webpack_require__(0);
 
@@ -26650,7 +26650,7 @@ module.exports = SimpleEventPlugin;
 
 
 
-var SyntheticEvent = __webpack_require__(16);
+var SyntheticEvent = __webpack_require__(15);
 
 /**
  * @interface Event
@@ -26692,7 +26692,7 @@ module.exports = SyntheticAnimationEvent;
 
 
 
-var SyntheticEvent = __webpack_require__(16);
+var SyntheticEvent = __webpack_require__(15);
 
 /**
  * @interface Event
@@ -27061,7 +27061,7 @@ module.exports = SyntheticTouchEvent;
 
 
 
-var SyntheticEvent = __webpack_require__(16);
+var SyntheticEvent = __webpack_require__(15);
 
 /**
  * @interface Event
@@ -27334,7 +27334,7 @@ module.exports = '15.6.2';
 
 var _prodInvariant = __webpack_require__(2);
 
-var ReactCurrentOwner = __webpack_require__(15);
+var ReactCurrentOwner = __webpack_require__(14);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactInstanceMap = __webpack_require__(37);
 
@@ -32025,7 +32025,7 @@ var Heading = function Heading() {
       _react2.default.createElement(
         _reactRouter.Link,
         { to: '/' },
-        _react2.default.createElement('img', { id: 'logo-img', className: 'button', src: 'public/img/logo.svg', alt: 'logo' })
+        _react2.default.createElement('img', { id: 'logo-img', className: 'button', src: 'img/logo.svg', alt: 'logo' })
       )
     ),
     _react2.default.createElement(
@@ -32078,7 +32078,11 @@ var AllMinions = function AllMinions(props) {
       _react2.default.createElement(
         _reactRouter.Link,
         { to: '/minions/' + minion.id },
-        _react2.default.createElement('img', { className: 'button minion-thumbnail', src: 'public/img/minion.svg', alt: 'minion' }),
+        _react2.default.createElement('img', {
+          className: 'button minion-thumbnail',
+          src: 'img/minion.svg',
+          alt: 'minion'
+        }),
         _react2.default.createElement(
           'p',
           null,
@@ -32091,9 +32095,14 @@ var AllMinions = function AllMinions(props) {
           minion.id
         )
       ),
-      _react2.default.createElement('img', { onClick: function onClick() {
+      _react2.default.createElement('img', {
+        onClick: function onClick() {
           return props.deleteMinion(minion.id);
-        }, className: 'button x-button', src: 'public/img/x_button.svg', alt: '' })
+        },
+        className: 'button x-button',
+        src: 'img/x_button.svg',
+        alt: ''
+      })
     );
   });
 
@@ -32118,7 +32127,12 @@ var AllMinions = function AllMinions(props) {
           _react2.default.createElement(
             _reactRouter.Link,
             { to: '/minions/new' },
-            _react2.default.createElement('img', { id: 'add-minion-button', className: 'button', src: 'public/img/add_button.svg', alt: '' })
+            _react2.default.createElement('img', {
+              id: 'add-minion-button',
+              className: 'button',
+              src: 'img/add_button.svg',
+              alt: ''
+            })
           )
         )
       )
@@ -32129,7 +32143,7 @@ var AllMinions = function AllMinions(props) {
       _react2.default.createElement(
         _reactRouter.Link,
         { to: '/' },
-        _react2.default.createElement('img', { className: 'button', src: 'public/img/arrow.svg' })
+        _react2.default.createElement('img', { className: 'button', src: 'img/arrow.svg' })
       )
     )
   );
@@ -32194,7 +32208,11 @@ var Home = function Home(_ref) {
         _react2.default.createElement(
           'div',
           { id: 'minions-launch', className: 'button launch-button' },
-          _react2.default.createElement('img', { className: 'button launch-icon', src: 'public/img/minion_icon_home.svg', alt: '' }),
+          _react2.default.createElement('img', {
+            className: 'button launch-icon',
+            src: 'img/minion_icon_home.svg',
+            alt: ''
+          }),
           _react2.default.createElement(
             'div',
             { className: 'button label launch-label' },
@@ -32208,7 +32226,11 @@ var Home = function Home(_ref) {
         _react2.default.createElement(
           'div',
           { id: 'ideas-launch', className: 'button launch-button' },
-          _react2.default.createElement('img', { className: 'button launch-icon', src: 'public/img/minion_icon_money.svg', alt: '' }),
+          _react2.default.createElement('img', {
+            className: 'button launch-icon',
+            src: 'img/minion_icon_money.svg',
+            alt: ''
+          }),
           _react2.default.createElement(
             'div',
             { className: 'button label launch-label' },
@@ -32467,7 +32489,12 @@ var AllIdeas = function AllIdeas(_ref) {
 
   var allIdeas = ideas.map(function (idea) {
     var income = (0, _utils.formatCash)(idea.weeklyRevenue * idea.numWeeks);
-    return _react2.default.createElement(_IdeaListItem2.default, { key: idea.id, id: idea.id, name: idea.name, income: income });
+    return _react2.default.createElement(_IdeaListItem2.default, {
+      key: idea.id,
+      id: idea.id,
+      name: idea.name,
+      income: income
+    });
   });
 
   var total = (0, _utils.formatCash)(ideas.reduce(function (accum, curr) {
@@ -32520,7 +32547,12 @@ var AllIdeas = function AllIdeas(_ref) {
               _react2.default.createElement(
                 _reactRouter.Link,
                 { to: '/ideas/new' },
-                _react2.default.createElement('img', { id: 'add-idea', className: 'button', src: 'public/img/add_button.svg', alt: 'add minion' })
+                _react2.default.createElement('img', {
+                  id: 'add-idea',
+                  className: 'button',
+                  src: 'img/add_button.svg',
+                  alt: 'add minion'
+                })
               )
             )
           )
@@ -32543,7 +32575,7 @@ var AllIdeas = function AllIdeas(_ref) {
       _react2.default.createElement(
         _reactRouter.Link,
         { to: '/' },
-        _react2.default.createElement('img', { className: 'button', src: 'public/img/arrow.svg' })
+        _react2.default.createElement('img', { className: 'button', src: 'img/arrow.svg' })
       )
     )
   );
@@ -32714,9 +32746,11 @@ var Idea = function (_Component) {
           this.state.editing ? _react2.default.createElement(_IdeaEdit2.default, { idea: this.props.idea, handleChange: this.handleChange }) : _react2.default.createElement(_IdeaDescription2.default, { idea: this.props.idea }),
           _react2.default.createElement(
             'div',
-            { id: 'save-idea',
-              className: isValid ? "button save-button" : "button save-button disabled",
-              onClick: isValid ? this.toggleEdit : function () {} },
+            {
+              id: 'save-idea',
+              className: isValid ? 'button save-button' : 'button save-button disabled',
+              onClick: isValid ? this.toggleEdit : function () {}
+            },
             buttonText
           )
         ),
@@ -32726,7 +32760,7 @@ var Idea = function (_Component) {
           _react2.default.createElement(
             _reactRouter.Link,
             { to: '/ideas' },
-            _react2.default.createElement('img', { className: 'button', src: 'public/img/arrow.svg' })
+            _react2.default.createElement('img', { className: 'button', src: 'img/arrow.svg' })
           )
         )
       );
@@ -33032,11 +33066,16 @@ var Minion = function (_Component) {
             _react2.default.createElement(
               'div',
               { className: 'minion-description' },
-              this.state.editing ? _react2.default.createElement(_MinionEdit2.default, _extends({ handleChange: this.handleChange }, this.props.minion)) : _react2.default.createElement(_MinionDescription2.default, this.props.minion)
+              this.state.editing ? _react2.default.createElement(_MinionEdit2.default, _extends({
+                handleChange: this.handleChange
+              }, this.props.minion)) : _react2.default.createElement(_MinionDescription2.default, this.props.minion)
             ),
             _react2.default.createElement(
               'div',
-              { className: 'button minion-save-button', onClick: this.toggleEdit },
+              {
+                className: 'button minion-save-button',
+                onClick: this.toggleEdit
+              },
               this.state.editing ? 'Save' : 'Edit'
             )
           ),
@@ -33052,7 +33091,7 @@ var Minion = function (_Component) {
           _react2.default.createElement(
             _reactRouter.Link,
             { to: '/minions' },
-            _react2.default.createElement('img', { className: 'button', src: 'public/img/arrow.svg' })
+            _react2.default.createElement('img', { className: 'button', src: 'img/arrow.svg' })
           )
         )
       );
@@ -33156,7 +33195,12 @@ var Work = function (_Component) {
         minionId: this.props.selectedMinion.id
       };
       var workRows = this.props.work.map(function (work, idx) {
-        return _react2.default.createElement(_SingleWorkRow2.default, { updateWork: _this2.props.updateWork, work: work, key: work.id, idx: idx });
+        return _react2.default.createElement(_SingleWorkRow2.default, {
+          updateWork: _this2.props.updateWork,
+          work: work,
+          key: work.id,
+          idx: idx
+        });
       });
 
       var nextIdx = workRows.length + 1;
@@ -33201,7 +33245,13 @@ var Work = function (_Component) {
             'tbody',
             null,
             workRows,
-            this.state.editingNewWork ? _react2.default.createElement(_SingleWorkRow2.default, { saveNewWork: this.saveNewWork, newWork: true, editing: true, work: defaultWork, idx: nextIdx }) : null,
+            this.state.editingNewWork ? _react2.default.createElement(_SingleWorkRow2.default, {
+              saveNewWork: this.saveNewWork,
+              newWork: true,
+              editing: true,
+              work: defaultWork,
+              idx: nextIdx
+            }) : null,
             _react2.default.createElement(
               'tr',
               null,
@@ -33212,7 +33262,10 @@ var Work = function (_Component) {
                 null,
                 _react2.default.createElement(
                   'div',
-                  { onClick: this.toggleEdit, className: 'button add-work-button' },
+                  {
+                    onClick: this.toggleEdit,
+                    className: 'button add-work-button'
+                  },
                   this.state.editingNewWork ? 'Cancel' : 'Add Work'
                 )
               )
@@ -33368,9 +33421,13 @@ var SingleWorkRowDescription = function SingleWorkRowDescription(_ref) {
     _react2.default.createElement(
       'td',
       { className: 'work-x' },
-      _react2.default.createElement('img', { className: 'button', onClick: function onClick() {
+      _react2.default.createElement('img', {
+        className: 'button',
+        onClick: function onClick() {
           return deleteWork(work);
-        }, src: 'public/img/x_button' + (idx % 2 === 0 ? '-trans' : '') + '.svg' })
+        },
+        src: 'img/x_button' + (idx % 2 === 0 ? '-trans' : '') + '.svg'
+      })
     ),
     _react2.default.createElement(
       'td',

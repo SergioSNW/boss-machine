@@ -1,15 +1,13 @@
-import React from 'react'
-import Heading from './Heading'
+import React from 'react';
+import Heading from './Heading';
 
-const App = ({children}) => {
+const App = ({ children }) => {
   return (
     <div>
       <Heading />
-      <div id="content">
-        { children }
-      </div>
+      <div id="content">{children}</div>
     </div>
-  )
-}
+  );
+};
 
 export default App;

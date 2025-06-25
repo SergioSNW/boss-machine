@@ -9,31 +9,30 @@ import MinionDescription from './MinionDescription';
 import MinionEdit from './MinionEdit';
 
 class Minion extends Component {
-
   constructor(props) {
     super(props);
     let editing = props.newMinion ? true : false;
     this.state = {
       editing: editing,
       minion: props.minion,
-    }
+    };
   }
 
   componentWillReceiveProps(newProps) {
     this.setState({
-      minion: newProps.minion
+      minion: newProps.minion,
     });
   }
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
       minion: Object.assign(this.state.minion, {
         [e.target.name]: e.target.value,
       }),
     });
-  }
+  };
 
-  toggleEdit = e => {
+  toggleEdit = (e) => {
     if (this.state.editing) {
       if (this.props.newMinion) {
         this.props.createMinion(this.state.minion);
@@ -41,11 +40,11 @@ class Minion extends Component {
         this.props.updateMinion(this.state.minion);
       }
     }
-    
+
     this.setState({
-      editing: !this.state.editing
+      editing: !this.state.editing,
     });
-  }
+  };
 
   render() {
     return (
@@ -53,21 +52,25 @@ class Minion extends Component {
         <div id="single-minion-landing">
           <div className="minion-details">
             <div className="label meetings-label">
-              { 
-                this.props.newMinion
+              {this.props.newMinion
                 ? `New Minion`
-                : `Minion Id #${this.state.minion.id}`
-              }
+                : `Minion Id #${this.state.minion.id}`}
             </div>
             <div className="minion-description">
-              { 
-                this.state.editing
-                ? <MinionEdit handleChange={this.handleChange} {...this.props.minion} />
-                : <MinionDescription {...this.props.minion}/>
-              }
+              {this.state.editing ? (
+                <MinionEdit
+                  handleChange={this.handleChange}
+                  {...this.props.minion}
+                />
+              ) : (
+                <MinionDescription {...this.props.minion} />
+              )}
             </div>
-            <div className="button minion-save-button" onClick={this.toggleEdit}>
-              { this.state.editing ? 'Save' : 'Edit' }
+            <div
+              className="button minion-save-button"
+              onClick={this.toggleEdit}
+            >
+              {this.state.editing ? 'Save' : 'Edit'}
             </div>
           </div>
           <div className="work-details">
@@ -76,24 +79,24 @@ class Minion extends Component {
         </div>
         <div className="button back-button">
           <Link to="/minions">
-            <img className="button" src="public/img/arrow.svg" />
+            <img className="button" src="img/arrow.svg" />
           </Link>
         </div>
       </div>
-    )
+    );
   }
 }
 
-const mapState = ({selectedMinion, appState}) => ({
+const mapState = ({ selectedMinion, appState }) => ({
   minion: selectedMinion,
   newMinion: appState.editingNewMinion,
 });
 
-const mapDispatch = dispatch => ({
-  updateMinion: minion => {
+const mapDispatch = (dispatch) => ({
+  updateMinion: (minion) => {
     dispatch(updateMinionThunk(minion));
   },
-  createMinion: minion => {
+  createMinion: (minion) => {
     dispatch(createMinionThunk(minion));
   },
 });

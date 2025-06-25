@@ -7,7 +7,11 @@ const SingleWorkRowDescription = ({ work, idx, toggleEdit, deleteWork }) => {
   return (
     <tr>
       <td className="work-x">
-        <img className="button" onClick={() => deleteWork(work)} src={`public/img/x_button${idx % 2 === 0 ? '-trans' : ''}.svg`} />
+        <img
+          className="button"
+          onClick={() => deleteWork(work)}
+          src={`img/x_button${idx % 2 === 0 ? '-trans' : ''}.svg`}
+        />
       </td>
       <td className="work-title">{work.title}</td>
       <td className="work-desc">{work.description}</td>
@@ -16,13 +20,13 @@ const SingleWorkRowDescription = ({ work, idx, toggleEdit, deleteWork }) => {
         <div className=" button work-save-button">Edit</div>
       </td>
     </tr>
-  )
-}
+  );
+};
 
-const mapDispatch = dispatch => ({
-  deleteWork: work => {
+const mapDispatch = (dispatch) => ({
+  deleteWork: (work) => {
     dispatch(deleteWorkThunk(work));
-  }
-})
+  },
+});
 
 export default connect(null, mapDispatch)(SingleWorkRowDescription);

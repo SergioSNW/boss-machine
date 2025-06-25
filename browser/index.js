@@ -26,12 +26,13 @@ import Idea from './components/Idea';
 import Minion from './components/Minion';
 
 // https://boss-machine-rt4w.onrender.com/ was previously http://localhost:4001
+const API_URL = 'https://boss-machine-rt4w.onrender.com';
 
 const appEnter = (nextRouterState) => {
   Promise.all([
-    axios.get(`${process.env.REACT_APP_API_URL}api/minions`),
-    axios.get(`${process.env.REACT_APP_API_URL}api/ideas`),
-    axios.get(`${process.env.REACT_APP_API_URL}api/meetings`),
+    axios.get(`${API_URL}/api/minions`),
+    axios.get(`${API_URL}/api/ideas`),
+    axios.get(`${API_URL}/api/meetings`),
   ])
     .then(([minionsResponse, ideasResponse, meetingsResponse]) => {
       return [minionsResponse.data, ideasResponse.data, meetingsResponse.data];
@@ -48,7 +49,7 @@ const singleMinionEnter = (nextRouterState) => {
   store.dispatch(resetEditingState());
   const id = nextRouterState.params.id;
   axios
-    .get(`${process.env.REACT_APP_API_URL}api/minions/${id}`)
+    .get(`${API_URL}/api/minions/${id}`)
     .then((res) => res.data)
     .then((minion) => {
       store.dispatch(setSelectedMinion(minion));
@@ -56,7 +57,7 @@ const singleMinionEnter = (nextRouterState) => {
     .catch(console.error.bind(console));
 
   axios
-    .get(`${process.env.REACT_APP_API_URL}api/minions/${id}/work`)
+    .get(`${API_URL}/api/minions/${id}/work`)
     .then((res) => res.data)
     .then((work) => {
       store.dispatch(setWork(work));
@@ -67,7 +68,7 @@ const singleMinionEnter = (nextRouterState) => {
 const singleIdeaEnter = (nextRouterState) => {
   const id = nextRouterState.params.id;
   axios
-    .get(`${process.env.REACT_APP_API_URL}api/ideas/${id}`)
+    .get(`${API_URL}/api/ideas/${id}`)
     .then((res) => res.data)
     .then((idea) => {
       store.dispatch(setSelectedIdea(idea));
